@@ -1,0 +1,267 @@
+# User Management
+
+[Datasource Onboarding](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40.md)
+
+[User Management](User%20Management%204cec064a73e14a619d3eaf694de7f698.md)
+
+[Project Builder](Project%20Builder%207d59ea7b603648dfb0c80430255b2e2b.md)
+
+[Embedding Documentation](Embedding%20Documentation%2050702aa0ad7e46cc8da8390e461e79fd.md)
+
+# How Buster Manages Users
+
+Now that you’ve onboarded your datasource, it’s time to figure out how to add users to your project.  Depending on your database architecture that was selected at the beginning, this will look a little different.
+
+Similar to services like Stripe, you will need to create ‘Buster users’ if you’d like to give each user their own personal and secure experience.
+
+**Currently, all user management is done programmatically via the Buster API. You can find your API Key in the ‘Settings’ page of your account.**
+
+# How do I Create a Buster User?
+
+Currently, you can only create a Buster user through our API:
+
+Request:
+
+```bash
+curl -X POST --location 'https://api.buster.so/api/v1/users' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <API-KEY>'
+--data '{
+    <BODY>
+}'
+```
+
+Request Body:
+
+id string
+
+This is the identifier you would like to refer to the user with.  Typically this is a unique identifier for a user that you use within your own system.
+
+project_id string
+
+This is the identifier of the project you would like to assign the user to.
+
+name string
+
+This is the name that you will search your user by. This can be a username, full name, email, etc.
+
+group string
+
+This is the name that you group users by.  This can be a company, account, group name, etc.
+
+data_source_name string optional
+
+This is the name of the tenant you have created
+
+access_variables json optional
+
+Key value pairs of the access variables that will be used in your row level policies
+
+Example:
+
+```json
+{
+	"user_id": "123456",
+	"team_id": "team_123",
+}
+```
+
+# Multi-Tenant User Management
+
+![Multi-Tenant Access Controls](User%20Management%204cec064a73e14a619d3eaf694de7f698/Access_Controls_Location.png)
+
+Multi-Tenant Access Controls
+
+If you configured your datasource as a multi-tenant architecture, then you will be able to specify row level policies over your tables in the ‘Access controls’ page located within your datasource settings.
+
+## Writing Row Level Policies
+
+![Row Level Policy.png](User%20Management%204cec064a73e14a619d3eaf694de7f698/Row_Level_Policy.png)
+
+You are able to define row level policies for each of your tables using the same SQL dialect as your datasource. (i.e. BigQuery, Postgres, MySQL, etc.)
+
+### How do these policies work?
+
+We do not depend on an LLM to apply security measures for us.  We tested this and found it extremely unreliable.  Instead Buster generates a query, we parse that query, then apply the filters as Common Table Expressions (CTEs).  These filtered queries are built after the query has been validated and just before the query is sent to the database/warehouse. Every external user has the queries applied with the Access Variables you assign during user creation.
+
+### How To Write a Policy
+
+ Here are steps to write a perfect row level policy:
+
+1. All policies must start with `SELECT * FROM table_name_here` . 
+    - We do not actually use a `SELECT *` this is just a placeholder for us and makes it easier to understand the policy you’re writing.
+2. Do not use aliases for columns or tables in the policy.
+3. You are free to write any policy that is syntactically correct for the datasource you are onboarding.
+4. Wrap your access variables with the `{ }` curly braces in the query.
+
+## Example of User Access Variables and Policy
+
+If I had a table called `customers` and each user should only see the rows where their unique identifier matches the `id` column, then you would go about creating a user and writing a policy as follows:
+
+1. Define the row level policy for the `customers` table:
+    
+    ```sql
+    SELECT * FROM customers WHERE id = {customer_id}
+    ```
+    
+2. Create your user:
+    
+    ```bash
+    curl -X POST --location 'https://api.buster.so/api/v1/users' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer <API-KEY>'
+    --data '{
+        "id": "8907dcd1-1919-474b-aba7-7f23a062d02e",
+    		"project_id": "c43a9bb6-ca17-49dd-b5bd-59250aae3e29",
+    		"name": "Buster Bluth",
+    		"group": "Bluths Bananas",
+    		"access_variables": {
+    				"customer_id": "8907dcd1-1919-474b-aba7-7f23a062d02e"
+    				# In this case, customer id is the same as the id
+    		}
+    }'
+    ```
+    
+3. User can then start asking questions and the row level policies will automatically applied! Here is an example if a user asked a questions related to the `customers` table:
+
+<aside>
+👤 **User asks:**
+Can you show me all of my new customers from the last 3 months?
+
+</aside>
+
+<aside>
+🤖 **Buster Generates:**
+
+```bash
+SELECT [c.name](http://c.name/), c.joined_at
+FROM customers c
+WHERE c.joined_at > current_date - INTERVAL '3 months';
+```
+
+******************************Buster applies filter for `customers` table:**
+
+```bash
+WITH customers AS (
+	SELECT c.name, c.joined_at
+	FROM customers c
+	WHERE c.id = '8907dcd1-1919-474b-aba7-7f23a062d02e'
+)
+
+SELECT c.name, c.joined_at
+FROM customers c
+WHERE c.joined_at > current_date - INTERVAL '3 months';
+```
+
+******************************Buster responds according to the data.******************************
+
+</aside>
+
+# Single-Tenant User Management
+
+![Single Tenant Doc Diagram.png](User%20Management%204cec064a73e14a619d3eaf694de7f698/Single_Tenant_Doc_Diagram.png)
+
+If you configured your datasource as a single-tenant architecture, then you will need to assign users to their tenant.  If you assign a user to a tenant, they will be routed to that tenant when they ask Buster questions.  ****************************This all happens within the same project.**************************** We chose to structure it this way so you could manage styling, training, etc. all in one place.
+
+## Creating a Tenant
+
+After onboarding your data source, you can start onboarding individual tenants! Here is an example of me creating a new Postgres tenant.
+
+```bash
+curl --location 'https://api.buster.so/api/v1/tenants' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <REDACTED>' \
+--data '{
+    "parent_name": "buster_demo",
+    "tenant_name": "buster_tenant_1",
+    "credentials": {
+        "Postgres": {
+            "host": "rds.amazonaws.com",
+            "port": "5432",
+            "username": "postgres",
+            "password": "supersecret",
+            "database": "postgres"
+        }
+    }
+}'
+```
+
+Request Body:
+
+parent_name string
+
+This is the name of the data source you just onboarded, not the tenant. 
+
+- Where can I find the parent_name?
+    
+    In the ‘Data Sources’ tab, you will find it under the ********Name******** field.
+    
+    ![Screenshot 2023-11-02 at 10.33.19 PM.png](User%20Management%204cec064a73e14a619d3eaf694de7f698/Screenshot_2023-11-02_at_10.33.19_PM.png)
+    
+
+tenant_name string
+
+This is the name that you’d like to assign to the new tenant that you’re creating
+
+credentials object
+
+This is one of the following objects depending on your data source:
+
+- Postgres
+    
+    ```json
+    {
+         "Postgres": {
+             "host": "rds.amazonaws.com",
+             "port": "5432",
+             "username": "postgres",
+             "password": "supersecret",
+             "database": "postgres"
+    				 "schema": "public" **Optional
+         }
+     }
+    ```
+    
+- BigQuery
+    
+    ```json
+    {
+         "Bigquery": {
+             "credentials_json": "{\"service_role...}",
+             "project_id": "buster-project",
+             "data_set_id": "buster_data_set" **Optional
+         }
+    }
+    ```
+    
+
+## Adding a User to the Tenant
+
+Currently, the easiest way to add a user to a tenant is on user creation.  Here is an example of how you create a user and add them to the tenant:
+
+```bash
+curl --location 'http://localhost:3001/api/v1/users' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <REDACTED>' \
+--data '{
+    "id": "user_1",
+    "project_id": "project_id",
+    "data_source_name": "tenant_1"
+}'
+```
+
+That’s it!  You can repeat this process for all your users and tenants.
+
+# Finishing Up…
+
+Now that you know how to apply access controls over your data source, you can get your project ready to be embedded in your app.
+
+← Previous
+
+Add link here
+
+Next →
+
+Add link here
+
+On this page
