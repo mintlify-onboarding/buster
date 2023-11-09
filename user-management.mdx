@@ -1,14 +1,8 @@
-# User Management
+---
+title: User Management
+---
 
-[Datasource Onboarding](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40.md)
-
-[User Management](User%20Management%204cec064a73e14a619d3eaf694de7f698.md)
-
-[Project Builder](Project%20Builder%207d59ea7b603648dfb0c80430255b2e2b.md)
-
-[Embedding Documentation](Embedding%20Documentation%2050702aa0ad7e46cc8da8390e461e79fd.md)
-
-# How Buster Manages Users
+## How Buster Manages Users
 
 Now that you’ve onboarded your datasource, it’s time to figure out how to add users to your project.  Depending on your database architecture that was selected at the beginning, this will look a little different.
 
@@ -16,7 +10,7 @@ Similar to services like Stripe, you will need to create ‘Buster users’ if y
 
 **Currently, all user management is done programmatically via the Buster API. You can find your API Key in the ‘Settings’ page of your account.**
 
-# How do I Create a Buster User?
+## How do I Create a Buster User?
 
 Currently, you can only create a Buster user through our API:
 
@@ -33,30 +27,29 @@ curl -X POST --location 'https://api.buster.so/api/v1/users' \
 
 Request Body:
 
-id string
+<ResponseField name="id" type="string">
+  This is the identifier you would like to refer to the user with.  Typically this is a unique identifier for a user that you use within your own system.
+</ResponseField>
 
-This is the identifier you would like to refer to the user with.  Typically this is a unique identifier for a user that you use within your own system.
+<ResponseField name="project_id" type="string">
+  This is the identifier of the project you would like to assign the user to.
+</ResponseField>
 
-project_id string
+<ResponseField name="name" type="string">
+  This is the name that you will search your user by. This can be a username, full name, email, etc.
+</ResponseField>
 
-This is the identifier of the project you would like to assign the user to.
+<ResponseField name="group" type="string">
+  This is the name that you group users by.  This can be a company, account, group name, etc.
+</ResponseField>
 
-name string
+<ResponseField name="data_source_name" type="string" optional>
+  This is the name of the tenant you have created
+</ResponseField>
 
-This is the name that you will search your user by. This can be a username, full name, email, etc.
-
-group string
-
-This is the name that you group users by.  This can be a company, account, group name, etc.
-
-data_source_name string optional
-
-This is the name of the tenant you have created
-
-access_variables json optional
-
-Key value pairs of the access variables that will be used in your row level policies
-
+<ResponseField name="access_variables" type="json" optional>
+  Key value pairs of the access variables that will be used in your row level policies
+</ResponseField>
 Example:
 
 ```json
@@ -68,7 +61,7 @@ Example:
 
 # Multi-Tenant User Management
 
-![Multi-Tenant Access Controls](User%20Management%204cec064a73e14a619d3eaf694de7f698/Access_Controls_Location.png)
+![Multi-Tenant Access Controls](/User-Management/Access_Controls_Location.png)
 
 Multi-Tenant Access Controls
 
@@ -76,7 +69,7 @@ If you configured your datasource as a multi-tenant architecture, then you will 
 
 ## Writing Row Level Policies
 
-![Row Level Policy.png](User%20Management%204cec064a73e14a619d3eaf694de7f698/Row_Level_Policy.png)
+![Row Level Policy.png](/User-Management/Row_Level_Policy.png)
 
 You are able to define row level policies for each of your tables using the same SQL dialect as your datasource. (i.e. BigQuery, Postgres, MySQL, etc.)
 
@@ -124,13 +117,13 @@ If I had a table called `customers` and each user should only see the rows where
     
 3. User can then start asking questions and the row level policies will automatically applied! Here is an example if a user asked a questions related to the `customers` table:
 
-<aside>
+<Note>
 👤 **User asks:**
 Can you show me all of my new customers from the last 3 months?
 
-</aside>
+</Note>
 
-<aside>
+<Check>
 🤖 **Buster Generates:**
 
 ```bash
@@ -139,7 +132,7 @@ FROM customers c
 WHERE c.joined_at > current_date - INTERVAL '3 months';
 ```
 
-******************************Buster applies filter for `customers` table:**
+**Buster applies filter for `customers` table:**
 
 ```bash
 WITH customers AS (
@@ -153,13 +146,13 @@ FROM customers c
 WHERE c.joined_at > current_date - INTERVAL '3 months';
 ```
 
-******************************Buster responds according to the data.******************************
+**Buster responds according to the data.**
 
-</aside>
+</Check>
 
 # Single-Tenant User Management
 
-![Single Tenant Doc Diagram.png](User%20Management%204cec064a73e14a619d3eaf694de7f698/Single_Tenant_Doc_Diagram.png)
+![Single Tenant Doc Diagram.png](/User-Management/Single_Tenant_Doc_Diagram.png)
 
 If you configured your datasource as a single-tenant architecture, then you will need to assign users to their tenant.  If you assign a user to a tenant, they will be routed to that tenant when they ask Buster questions.  ****************************This all happens within the same project.**************************** We chose to structure it this way so you could manage styling, training, etc. all in one place.
 
@@ -188,15 +181,15 @@ curl --location 'https://api.buster.so/api/v1/tenants' \
 
 Request Body:
 
-parent_name string
-
-This is the name of the data source you just onboarded, not the tenant. 
+<ResponseField name="parent_name" type="string">
+  This is the name of the data source you just onboarded, not the tenant. 
+</ResponseField>
 
 - Where can I find the parent_name?
     
-    In the ‘Data Sources’ tab, you will find it under the ********Name******** field.
+    In the ‘Data Sources’ tab, you will find it under the **Name** field.
     
-    ![Screenshot 2023-11-02 at 10.33.19 PM.png](User%20Management%204cec064a73e14a619d3eaf694de7f698/Screenshot_2023-11-02_at_10.33.19_PM.png)
+    ![Screenshot 2023-11-02 at 10.33.19 PM.png](/User-Management/Screenshot_2023-11-02_at_10.33.19_PM.png)
     
 
 tenant_name string
@@ -207,8 +200,7 @@ credentials object
 
 This is one of the following objects depending on your data source:
 
-- Postgres
-    
+<Accordion title="Postgres">
     ```json
     {
          "Postgres": {
@@ -221,10 +213,11 @@ This is one of the following objects depending on your data source:
          }
      }
     ```
-    
-- BigQuery
-    
-    ```json
+</Accordion>
+
+
+<Accordion title="BigQuery">
+      ```json
     {
          "Bigquery": {
              "credentials_json": "{\"service_role...}",
@@ -233,7 +226,7 @@ This is one of the following objects depending on your data source:
          }
     }
     ```
-    
+</Accordion>
 
 ## Adding a User to the Tenant
 
@@ -255,13 +248,3 @@ That’s it!  You can repeat this process for all your users and tenants.
 # Finishing Up…
 
 Now that you know how to apply access controls over your data source, you can get your project ready to be embedded in your app.
-
-← Previous
-
-Add link here
-
-Next →
-
-Add link here
-
-On this page

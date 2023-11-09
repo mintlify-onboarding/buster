@@ -1,16 +1,10 @@
-# Datasource Onboarding
+---
+title: Datasource Onboarding
+---
 
-[Datasource Onboarding](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40.md)
+## Getting Started
 
-[User Management](User%20Management%204cec064a73e14a619d3eaf694de7f698.md)
-
-[Project Builder](Project%20Builder%207d59ea7b603648dfb0c80430255b2e2b.md)
-
-[Embedding Documentation](Embedding%20Documentation%2050702aa0ad7e46cc8da8390e461e79fd.md)
-
-# Getting Started
-
-![Screen Shot 2023-10-25 at 12.03.59 PM.png](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Screen_Shot_2023-10-25_at_12.03.59_PM.png)
+![](/images/Datasource-Onboarding/Single_Tenancy.png)
 
 ### What you will need
 
@@ -22,9 +16,9 @@
 - Any database/warehouse documentation your team has already prepared.
 - An ERD diagram.
 
-# Connecting to your data source
+#$ Connecting to your data source
 
-![Datasource Connection Page](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Untitled.png)
+![Datasource Connection Page](/images/Datasource-Onboarding/Untitled-1.png)
 
 Datasource Connection Page
 
@@ -36,18 +30,18 @@ Buster accesses your database/warehouse through a **read-only user.**  This user
 - Access to schema information such as schemas, tables, and columns.
 - Access to all intermediate tables or columns that would be used to join across tables.
 
-> *****Note: Enabling access to these tables and columns does not mean end-users will have access to query them. See Access Controls below to understand how Buster manages access to your tables and columns.*
-> 
+<Note> 
+Enabling access to these tables and columns does not mean end-users will have access to query them. See Access Controls below to understand how Buster manages access to your tables and columns.*
+</Note>
 
 ### Selecting Tenancy
 
 In order to manage access to your data between customers, you will need to select your database architecture from one of the following options:
 
-- **Single Tenant**
-    
+<Accordion title="Single Tenant">
     This means that your customers’ data is broken out into different logical or physical locations.  If your SQL queries between customers look like the example below, this is likely what you should choose.
     
-    ![Single tenancy diagram](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Single_Tenancy.png)
+    ![Single tenancy diagram](/images/Datasource-Onboarding/Single_Tenancy.png)
     
     Single tenancy diagram
     
@@ -60,12 +54,11 @@ In order to manage access to your data between customers, you will need to selec
     # Customer 2's query is using the customer_2 schema/database
     SELECT * FROM customer_2.users;
     ```
-    
-- **Multi Tenant**
-    
+</Accordion>
+<Accordion title="Multi Tenant">
     This means that your customers share the same database and that records are separated on a row level, typically by some sort of customer identifier.  If your SQL queries between customers look like the example below, this is likely what you should choose.
     
-    ![Multi tenancy diagram](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Multi_Tenancy.png)
+    ![Multi tenancy diagram](/images/Datasource-Onboarding/Multi_Tenancy.png)
     
     Multi tenancy diagram
     
@@ -78,18 +71,17 @@ In order to manage access to your data between customers, you will need to selec
     # Customer 1's query is using the WHERE clause to provision access.
     SELECT * FROM users WHERE users.id = 'customer_2';
     ```
-    
+</Accordion>
 
 ### Select Environment
 
-You’re able to select an environment for you datasources in Buster.  For any testing, development, or staging datasources, ****************************************************************************we recommend using the development environment****************************************************************************. This introduces an extra layer of security over data sources and prevents access to production environments during development.
+You’re able to select an environment for you datasources in Buster.  For any testing, development, or staging datasources, **we recommend using the development environment**. This introduces an extra layer of security over data sources and prevents access to production environments during development.
 
 ### Data Source Types and Necessary Credentials
 
 Depending on your data source, your credentials will look slightly different:
 
-- **Postgres**
-    
+<Accordion title="Postgres">
     **Host:**
     
     - This is where your database is active. *(Example: rds.amazonaws.com)*
@@ -100,159 +92,167 @@ Depending on your data source, your credentials will look slightly different:
     
     **Database Name:**
     
-    - The name of the database you are connecting to. **********************(Example: postgres)**********************
+    - The name of the database you are connecting to. **(Example: postgres)**
     
     **Username:**
     
-    - The username of the read-only user you created. ********(Example: buster)********
+    - The username of the read-only user you created. **(Example: buster)**
     
     **Password:**
     
-    - The password that you assigned to the read-only user at creation. **********************(Example: supersecure!)**********************
+    - The password that you assigned to the read-only user at creation. **(Example: supersecure!)**
     
     **Schemas:**
     
     - The schema(s) you would like to connect to Buster.
     
-    *********************************************************************************Note: If you’re customers are separated by schema, do not connect all schemas.  Only connect the schemas necessary to answer a ************SINGLE************ customers questions.*
+    <Note>If you’re customers are separated by schema, do not connect all schemas.  Only connect the schemas necessary to answer a **SINGLE** customers questions.</Note>
     
     **SSH Config:**
     
-    - If you require a connection through a bastion or jump host, please see: *[How to Connect to Buster via SSH](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40.md)*
-- **********MySQL/MariaDB**********
+    - If you require a connection through a bastion or jump host, please see: *[How to Connect to Buster via SSH](/Datasource-Onboarding)*
+
+</Accordion>
     
+<Accordion title="I am an Accordion.">
     **Host:**
     
     - This is where your database is active. *(Example: rds.amazonaws.com)*
     
     **Port:**
     
-    - The port your database uses. *****(Example: 3306)*****
+    - The port your database uses. **(Example: 3306)**
     
     **Username:**
     
-    - The username of the read-only user you created. ********(Example: buster)********
+    - The username of the read-only user you created. **(Example: buster)**
     
     **Password:**
     
-    - The password that you assigned to the read-only user at creation. **********************(Example: supersecure!)**********************
+    - The password that you assigned to the read-only user at creation. **(Example: supersecure!)**
     
-    *********************************************************************************Note: If you’re customers are separated by schema, do not connect all schemas.  Only connect the schemas necessary to answer a ************SINGLE************ customers questions.*
+    *Note: If you’re customers are separated by schema, do not connect all schemas.  Only connect the schemas necessary to answer a SINGLE customers questions.*
     
     **Database Name(s):**
     
-    - The name of the database(s) you are connecting to. **********************(Example: ecommerce_db)**********************
+    - The name of the database(s) you are connecting to. **(Example: ecommerce_db)**
     
-    *********************************************************************************Note: If you’re customers are separated by database, do not connect all databases.  Only connect the databases necessary to answer a ************SINGLE************ customers questions.*
+    *Note: If you’re customers are separated by database, do not connect all databases.  Only connect the databases necessary to answer a SINGLE customers questions.*
     
     **SSH Config:**
     
-    - If you require a connection through a bastion or jump host, please see: *[How to Connect to Buster via SSH](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40.md)*
-- ********************SQL Server********************
+    - If you require a connection through a bastion or jump host, please see: *[How to Connect to Buster via SSH](/Datasource-Onboarding)
+</Accordion>
     
+
+<Accordion title="SQL Server">
     **Host:**
     
     - This is where your database is active. *(Example: rds.amazonaws.com)*
     
     **Port:**
     
-    - The port your database uses. *****(Example: 3306)*****
+    - The port your database uses. **(Example: 3306)**
     
     **Username:**
     
-    - The username of the read-only user you created. ********(Example: buster)********
+    - The username of the read-only user you created. **(Example: buster)**
     
     **Password:**
     
-    - The password that you assigned to the read-only user at creation. **********************(Example: supersecure!)**********************
+    - The password that you assigned to the read-only user at creation. **(Example: supersecure!)**
     
-    *********************************************************************************Note: If you’re customers are separated by schema, do not connect all schemas.  Only connect the schemas necessary to answer a ************SINGLE************ customers questions.*
+    <Note>If you’re customers are separated by schema, do not connect all schemas.  Only connect the schemas necessary to answer a **SINGLE** customers questions.</Note>
     
     **Database Name(s):**
     
-    - The name of the database(s) you are connecting to. **********************(Example: ecommerce_db)**********************
+    - The name of the database(s) you are connecting to. **(Example: ecommerce_db)**
     
-    *********************************************************************************Note: If you’re customers are separated by database, do not connect all databases.  Only connect the databases necessary to answer a ************SINGLE************ customers questions.*
+   <Note>If you’re customers are separated by database, do not connect all databases.  Only connect the databases necessary to answer a **SINGLE** customers questions.</Note>
     
     **SSH Config:**
-    
-    - If you require a connection through a bastion or jump host, please see: *[How to Connect to Buster via SSH](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40.md)*
-- **BigQuery**
-    
-    **********************************Json Credentials:**********************************
+
+     - If you require a connection through a bastion or jump host, please see: *[How to Connect to Buster via SSH](/Datasource-Onboarding)*
+
+</Accordion>
+
+<Accordion title="BigQuery">
+    **Json Credentials:**
     
     - This is the file that was given when you created the service account.
     
-    ****Note: This user must have the**** `bigquery.jobs.create` ****role and have access to the schema information for the project you’re connecting.****
+    <Note>This user must have the **`bigquery.jobs.create`**role and have access to the schema information for the project you’re connecting.</Note>
     
-    ****************Project ID:****************
+    **Project ID:**
     
-    - This is the identifier for the project you are connecting to. *********************(Example: buster_project)*********************
+    - This is the identifier for the project you are connecting to. **(Example: buster_project)**
     
-    ********************Dataset ID (Optional):********************
+    **Dataset ID (Optional):**
     
     - By default, Buster will pull in all datasets in a project. However, if you want to limit Buster to a specific dataset within a project, you would do that here.
     
-    *********************************************************************************Note: If you’re customers are separated by dataset, do not connect all datasets.  Only connect the dataset necessary to answer a ************SINGLE************ customers questions.*
+    <Note>If you’re customers are separated by dataset, do not connect all datasets.  Only connect the dataset necessary to answer a **SINGLE** customers questions.</Note>
     
-    ********************Restrict Tables (Optional):********************
+    **Restrict Tables (Optional):**
     
     - By default, Buster will pull in all tables in a project.  However, if you want to limit Buster to specific tables within a project and dataset, you would do that here.
-- **Databricks**
-    
-    **********Host:********** 
+</Accordion>
+
+<Accordion title="Databricks">
+    **Host:** 
     
     - This is where your data warehouse is active. *(Example: cloud.databricks.com)*
     
-    ****************API Key:****************
+    **API Key:**
     
     - This is an API Key with read-only access to your cluster.
     
-    **************************Warehouse ID:**************************
+    **Warehouse ID:**
     
     - The identifier of the warehouse you are connecting to.
     
-    ****************Catalog:****************
+    **Catalog:**
     
     - The name of the catalog that you are connecting to
-- **Redshift**
-    
+</Accordion>
+
+<Accordion title="Redshift.">
     Reach out to us for Redshift connections: [founders@buster.so](mailto:founders@buster.so?subject=Question%20about%20Buster)
+</Accordion>
     
-- **Snowflake**
-    
-    Reach out to us for Snowflake connections: [founders@buster.so](mailto:founders@buster.so?subject=Question%20about%20Buster)
+<Accordion title="Snowflake">
+  Reach out to us for Snowflake connections: [founders@buster.so](mailto:founders@buster.so?subject=Question%20about%20Buster)
+</Accordion>
     
 
 ### How to Connect to Buster via SSH
 
-# Controlling Table and Column Access
+## Controlling Table and Column Access
 
-![Tables and Columns Selection Page](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Untitled%201.png)
+![Tables and Columns Selection Page](/images/Datasource-Onboarding/table.webp)
 
 Tables and Columns Selection Page
 
 By default, Buster will pull in all tables and columns that are accessible through the read-only user you provisioned earlier.  However this does not mean that users are able to query those tables or columns.
 
-****************************************************************************We recommend you turn off columns that:****************************************************************************
+**We recommend you turn off columns that:**
 
 - Are deprecated
 - Aren’t relevant to questions your users would ask
 - Have data integrity issues
 
-> *Note: You do not need to include tables or columns necessary for joins. Buster will still map across relationships in your database to answer questions.*
-> 
+<Note>You do not need to include tables or columns necessary for joins. Buster will still map across relationships in your database to answer questions.</Note>
 
 ### Access Control Validation
 
 Buster validates every query that is generated with the access controls you specify during this step. In the screenshot above, we turned off the `email` and `phone` columns in the `contacts` table. Here is an example of a user dialog with these access controls:
 
-<aside>
+<Warning>
 👤 **User asks: ‘**Show me all of our contacts’ emails.’
 
-</aside>
+</Warning>
 
-<aside>
+<Check>
 🤖 Buster begins query generation process…
 
 Query generated is: `SELECT email FROM contacts;`
@@ -261,13 +261,13 @@ Buster validates if user has access to contacts table, then if user has access t
 
 In this case, Buster prevents query from running on database due to lack of user permissions.
 
-******************Buster responds: ‘******************I’m sorry but I don’t have access to the data you are requesting.’
+**Buster responds: ‘**I’m sorry but I don’t have access to the data you are requesting.’
 
-</aside>
+</Check>
 
-You are able to change access at any time after onboarding.  **************************************************Be aware that if you turn off a table or column after it has been included in an answer to a user question, that user will no longer be able to retrieve data for that question.**************************************************
+You are able to change access at any time after onboarding.  **Be aware that if you turn off a table or column after it has been included in an answer to a user question, that user will no longer be able to retrieve data for that question.**
 
-# Descriptions
+## Descriptions
 
 We generate descriptions around your tables and columns that enables Buster to answer user questions more accurately.
 
@@ -287,11 +287,11 @@ You are able to change these descriptions at any time after onboarding.
 
 ### Table Descriptions and Keywords
 
-![Table Descriptions Page](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Untitled%202.png)
+![Table Descriptions Page](/images/Datasource-Onboarding/Untitled.png)
 
 Table Descriptions Page
 
-**********************Table Descriptions**********************
+**Table Descriptions**
 
 This description should be about **how** the table can be used to answer user questions. We recommend that you basically mention all the topics that can be answered using that table.  Here are some examples of good and bad descriptions for a table named `deals`.
 
@@ -300,35 +300,34 @@ This description should be about **how** the table can be used to answer user qu
 - Bad Example:
     - This table can be used to answer questions about deals.
 
-<aside>
+<Warning>
 🚨 We recommend keeping your descriptions below 3 sentences.
 
-</aside>
+</Warning>
 
-****************************Table Keywords****************************
+**Table Keywords**
 
 Your users may not refer to tables as they are named in your database.  For example you may have a table called `dim_orders` .  Relating to this table, your users will likely ask questions about orders, sales, transactions, etc.  Buster uses these keywords to more accurately answer user questions related to the table.
 
-<aside>
+<Warning>
 🚨 We recommend having at least 5 keywords for each table.
 
-</aside>
+</Warning>
 
-> *****Note: An individual keyword can actually be more than one word.*****
-> 
+<Note>An individual keyword can actually be more than one word.</Note>
 
 ### Column Descriptions
 
-![Column Descriptions Page](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Untitled%203.png)
+![Column Descriptions Page](/images/Datasource-Onboarding/Untitled-3.png)
 
 Column Descriptions Page
 
-Buster will attempt to generate descriptions about ******************what****************** your column is based on the column name, the context of the table as a whole, and 5 most recent samples values from the columns.  Typically, if your column name is human-readable (meaning it actually represents the data in the column) then Buster does a pretty good job of nailing these.
+Buster will attempt to generate descriptions about **what** your column is based on the column name, the context of the table as a whole, and 5 most recent samples values from the columns.  Typically, if your column name is human-readable (meaning it actually represents the data in the column) then Buster does a pretty good job of nailing these.
 
-<aside>
-🚨 **********************************************************************************************************************************We highly recommend you validate the description for each column.**********************************************************************************************************************************
+<Warning>
+🚨 **We highly recommend you validate the description for each column.**
 
-</aside>
+</Warning>
 
 Here are a few recommendations for writing good column descriptions:
 
@@ -381,9 +380,9 @@ Here are a few recommendations for writing good column descriptions:
         `settings`: these are the setting associated with a user. it has notification, dark_mode, and profile info.
         
 
-# Joins and Constraints
+## Joins and Constraints
 
-![Joins and Constraints Page](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Video_to_GIF.gif)
+![Joins and Constraints Page](/images/Datasource-Onboarding/Video_to_GIF.gif)
 
 Joins and Constraints Page
 
@@ -393,9 +392,9 @@ If you are connecting a relational database, we pulled any foreign key relations
 
 If you are connecting a warehouse, you will need to define all relationship for the tables you connected to Buster.
 
-# Stored Values
+## Stored Values
 
-![Stored Values](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Untitled%204.png)
+![Stored Values](/images/Datasource-Onboarding/Untitled-4.png)
 
 Stored Values
 
@@ -407,12 +406,11 @@ Without storing these values, your users would have to know exactly how the valu
 
 We’ve found that PII (Personally Identifiable Information) rarely needs to be stored.  Typically if a user question involves that information, it will be reference specifically, such as a birthday, address, email, or name.
 
-> ******************************************************************************Depending on how many distinct values are stored in your database, this step will vary in completion time from a few minutes to a few hours.  You will still be able to ask questions of your data, but may be lacking the values needed for accurate queries.******************************************************************************
-> 
+<Info>Depending on how many distinct values are stored in your database, this step will vary in completion time from a few minutes to a few hours.  You will still be able to ask questions of your data, but may be lacking the values needed for accurate queries.</Info>
 
 # Fine Tuning
 
-![Untitled](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Untitled%205.png)
+![Untitled](/images/Datasource-Onboarding/Untitled-5.png)
 
 Buster is finally ready to start answering questions about your data!  We aren’t finished onboarding quite yet.  While documentation and context increase performance, we’ve found that there is “undocumented” context that Buster can learn from.
 
@@ -427,14 +425,14 @@ Here are a few examples of user questions that require some “undocumented cont
 
 While Buster will attempt to make assumptions around questions, they may not always be correct.  This can be frustrating to end users.  Especially because they have zero context around your database and it may be difficult for them to guide Buster toward the right answer.
 
-<aside>
+<Note>
 📌 We recommend approving 25-100 question ↔ query pairs.  Each question that you approve is sent into our auto-training pipeline and Buster immediately starts learning from it.
 
-</aside>
+</Note>
 
 ### Fine-tuning a Response
 
-![Fine-tuning a question in Buster](Datasource%20Onboarding%206842921f039944f8a4cd5f618ccccf40/Untitled%206.png)
+![Fine-tuning a question in Buster](/images/Datasource-Onboarding/Untitled-6.png)
 
 Fine-tuning a question in Buster
 
@@ -442,14 +440,8 @@ When you ask or view a question in this space, you will be able to see the quest
 
 You are able to edit the question and the SQL directly.  You also have the capability to guide Buster toward the correct answer using the “Not quite right?” input box. In the case of the example above, I could ask Buster to break out the company sizes by 100 instead of 50.
 
-Once you click approve, Buster immediately starts learning from the question and generated SQL code.  ******************************You can always come back and edit questions, SQL, or even remove an approval. Be aware that changing the training data will not change any generated SQL for users that have previously asked questions.******************************
+Once you click approve, Buster immediately starts learning from the question and generated SQL code.  **You can always come back and edit questions, SQL, or even remove an approval. Be aware that changing the training data will not change any generated SQL for users that have previously asked questions.**
 
 # User Access Controls
 
 Buster is able to provision access controls over your data through Row Level Policies (Multi Tenant) or Permission Groups (Single Tenant).  In either case, Buster implements security without the use of an LLM. 
-
-Next →
-
-[Project Builder](Project%20Builder%207d59ea7b603648dfb0c80430255b2e2b.md) 
-
-On this page

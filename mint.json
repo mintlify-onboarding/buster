@@ -35,7 +35,13 @@
     "navigation": [
       {
         "group": "Getting Started with Buster",
-        "pages": ["Buster-Documentation"]
+        "pages": [
+          "Buster-Documentation",
+          "Datasource-Onboarding",
+          "user-management",
+          "Project-Builder",
+          "Embedding-Documentation"
+        ]
       }
     ],
     "footerSocials":
