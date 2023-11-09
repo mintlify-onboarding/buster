@@ -1,0 +1,45 @@
+{
+    "name": "Buster",
+    "logo": {
+      "light": "/logo/light.png",
+      "dark": "/logo/dark.png"
+    },
+    "favicon": "/favicon.png",
+    "colors": {
+      "primary": "#0E0E0E",
+      "light": "#FAFAFA",
+      "dark": "#0E0E0E"
+    },
+    "topbarCtaButton": {
+      "name": "Get started",
+      "url": "https://www.buster.so/sign-up"
+    },
+    "anchors": [
+      {
+        "name": "Internal Teams",
+        "icon": "users-medical",
+        "url": "https://www.buster.so/internal-teams"
+      },
+      {
+        "name": "Why Buster",
+        "icon": "question",
+        "url": "https://www.buster.so/why-buster"
+      }
+    ],
+    "topbarLinks": [
+        {
+          "name": "Sign In",
+          "url": "https://www.buster.so/sign-in"
+        }
+    ],
+    "navigation": [
+      {
+        "group": "Getting Started with Buster",
+        "pages": ["Buster-Documentation"]
+      }
+    ],
+    "footerSocials":
+      {
+          "linkedin": "https://www.linkedin.com/company/usebuster/"
+      }
+  }
